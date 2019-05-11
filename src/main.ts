@@ -28,13 +28,16 @@ const initDoc = async (): Promise<ReadonlyArray<Entry>> => {
   return cards.map(card => ({
     name: getProp(card, 'a.name'),
     description: getProp(card, 'div.description'),
-    signature: getProp(card, 'code:nth-child(0)'),
-    snippet: getProp(card, 'code:nth-child(0)')
+    signature: getProp(card, 'code:nth-child(1)'),
+    snippet: getProp(card, 'code:nth-child(2)')
   }))
 }
 
 const main = async (): Promise<void> => {
-  console.log(await initDoc())
+  const funcName = process.argv[2]
+  const documentation = await initDoc()
+  const foundFuncs = documentation.filter(({ name }) => name.includes(funcName))
+  console.log(foundFuncs.length ? foundFuncs : documentation)
 }
 
 main()
