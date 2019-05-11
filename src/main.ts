@@ -33,11 +33,25 @@ const initDoc = async (): Promise<ReadonlyArray<Entry>> => {
   }))
 }
 
+const formatEntryForOutput = (entry: Entry) => [
+  '',
+  `\x1b[4m${entry.name}\x1b[0m`,
+  entry.signature,
+  '',
+  ...entry.description.split('\n'),
+  ...entry.snippet.split('\n')
+]
+
 const main = async (): Promise<void> => {
   const funcName = process.argv[2]
   const documentation = await initDoc()
-  const foundFuncs = documentation.filter(({ name }) => name.includes(funcName))
-  console.log(foundFuncs.length ? foundFuncs : documentation)
+  const foundFuncs = funcName
+    ? documentation.filter(({ name }) => name.includes(funcName))
+    : documentation
+  foundFuncs
+    .map(formatEntryForOutput)
+    .flat()
+    .map(a => process.stdout.write(`${a}\n`))
 }
 
 main()
