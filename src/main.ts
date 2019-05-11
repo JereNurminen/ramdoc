@@ -8,9 +8,13 @@ interface Entry {
   snippet: string
 }
 
-const getProp = (card: HTMLElement, selector: string, index: number = 0): string => {
+const getProp = (
+  card: HTMLElement,
+  selector: string,
+  index: number = 0
+): string => {
   const value = card.querySelector<HTMLElement>(selector)
-  return value && value.textContent || ''
+  return (value && value.textContent) || ''
 }
 
 const getDocs = async (): Promise<string> =>
@@ -18,14 +22,15 @@ const getDocs = async (): Promise<string> =>
 
 const initDoc = async (): Promise<ReadonlyArray<Entry>> => {
   const dom = new JSDOM(await getDocs())
-  const cards = Array.from(dom.window.document.querySelectorAll<HTMLElement>('section.card'))
-  return cards
-    .map(card => ({
-      name: getProp(card, 'a.name'),
-      description: getProp(card, 'div.description'),
-      signature: getProp(card, 'code:nth-child(0)'),
-      snippet: getProp(card, 'code:nth-child(0)')
-    }))
+  const cards = Array.from(
+    dom.window.document.querySelectorAll<HTMLElement>('section.card')
+  )
+  return cards.map(card => ({
+    name: getProp(card, 'a.name'),
+    description: getProp(card, 'div.description'),
+    signature: getProp(card, 'code:nth-child(0)'),
+    snippet: getProp(card, 'code:nth-child(0)')
+  }))
 }
 
 const main = async (): Promise<void> => {
