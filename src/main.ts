@@ -1,21 +1,34 @@
 import fetch from 'node-fetch'
-import { JSDOM } from 'jsdom' 
+import { JSDOM } from 'jsdom'
 
-const getDocs = async (): Promise<string> => 
-  await fetch('https://ramdajs.com/docs/')
-    .then((res) => res.text())
+interface Entry {
+  name: string
+  signature: string
+  description: string
+  snippet: string
+}
 
+const getProp = (card: HTMLElement, selector: string, index: number = 0): string => {
+  const value = card.querySelector<HTMLElement>(selector)
+  return value && value.textContent || ''
+}
 
-const initDoc = async (): Promise<unknown> => {
+const getDocs = async (): Promise<string> =>
+  await fetch('https://ramdajs.com/docs/').then(res => res.text())
+
+const initDoc = async (): Promise<ReadonlyArray<Entry>> => {
   const dom = new JSDOM(await getDocs())
-  const cards = Array.from(
-    dom.window.document.querySelectorAll('section.card')
-  )
-  return cards.map((card) => ( {name: card.querySelector('a.name').innerHTML} ))
+  const cards = Array.from(dom.window.document.querySelectorAll<HTMLElement>('section.card'))
+  return cards
+    .map(card => ({
+      name: getProp(card, 'a.name'),
+      description: getProp(card, 'div.description'),
+      signature: getProp(card, 'code:nth-child(0)'),
+      snippet: getProp(card, 'code:nth-child(0)')
+    }))
 }
 
 const main = async (): Promise<void> => {
-  console.log("Hello!")
   console.log(await initDoc())
 }
 
