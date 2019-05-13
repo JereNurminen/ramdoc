@@ -1,12 +1,6 @@
 import fetch from 'node-fetch'
 import { JSDOM } from 'jsdom'
-
-interface Entry {
-  name: string
-  signature: string
-  description: string
-  snippet: string
-}
+import { formatEntry } from './utils/format'
 
 const getProp = (
   card: HTMLElement,
@@ -33,15 +27,6 @@ const initDoc = async (): Promise<ReadonlyArray<Entry>> => {
   }))
 }
 
-const formatEntryForOutput = (entry: Entry) => [
-  '',
-  `\x1b[4m${entry.name}\x1b[0m`,
-  entry.signature,
-  '',
-  ...entry.description.split('\n'),
-  ...entry.snippet.split('\n')
-]
-
 const main = async (): Promise<void> => {
   const funcName = process.argv[2]
   const documentation = await initDoc()
@@ -49,7 +34,7 @@ const main = async (): Promise<void> => {
     ? documentation.filter(({ name }) => name.includes(funcName))
     : documentation
   foundFuncs
-    .map(formatEntryForOutput)
+    .map(formatEntry)
     .flat()
     .map(a => process.stdout.write(`${a}\n`))
 }
