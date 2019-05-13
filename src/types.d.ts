@@ -3,5 +3,6 @@ interface Entry {
   signature: string
   description: string
   snippet: string
+  related: ReadonlyArray<string>
 }
 

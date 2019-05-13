@@ -6,5 +6,8 @@ export const formatEntry = (entry: Entry) => [
   entry.signature,
   '',
   ...entry.description.split('\n'),
-  ...entry.snippet.split('\n')
+  ...entry.snippet.split('\n'),
+  '',
+  'See also:',
+  entry.related.map(underline).join(', ')
 ]

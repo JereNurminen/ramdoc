@@ -11,6 +11,12 @@ const getProp = (
   return (value && value.textContent) || ''
 }
 
+const getListProp = (card: HTMLElement, selector: string): ReadonlyArray<string> =>
+{
+  const values = Array.from(card.querySelectorAll<HTMLElement>(selector))
+  return values ? values.map(val => val.textContent || '') : ['']
+}
+
 const getDocs = async (): Promise<string> =>
   await fetch('https://ramdajs.com/docs/').then(res => res.text())
 
@@ -23,7 +29,8 @@ const initDoc = async (): Promise<ReadonlyArray<Entry>> => {
     name: getProp(card, 'a.name'),
     description: getProp(card, 'div.description'),
     signature: getProp(card, 'code:nth-child(1)'),
-    snippet: getProp(card, 'code:nth-child(2)')
+    snippet: getProp(card, 'code:nth-child(2)'),
+    related: getListProp(card, 'div.see>a')
   }))
 }
 
