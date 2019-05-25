@@ -1,4 +1,7 @@
-enum Styles { Underline = '\x1b[4m', Bold = '\x1b[1m' }
+enum Styles {
+  Underline = '\x1b[4m',
+  Bold = '\x1b[1m'
+}
 
 const wrap = (style: Styles, text: string) => `${style}${text}\x1b[0m`
 

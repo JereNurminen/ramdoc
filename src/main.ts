@@ -1,45 +1,12 @@
-import fetch from 'node-fetch'
-import { JSDOM } from 'jsdom'
+import { loadDocs } from './utils/doc'
 import { formatEntry } from './utils/format'
-
-const getProp = (
-  card: HTMLElement,
-  selector: string,
-  index: number = 0
-): string => {
-  const value = card.querySelector<HTMLElement>(selector)
-  return (value && value.textContent) || ''
-}
-
-const getListProp = (card: HTMLElement, selector: string): ReadonlyArray<string> =>
-{
-  const values = Array.from(card.querySelectorAll<HTMLElement>(selector))
-  return values ? values.map(val => val.textContent || '') : ['']
-}
-
-const getDocs = async (): Promise<string> =>
-  await fetch('https://ramdajs.com/docs/').then(res => res.text())
-
-const initDoc = async (): Promise<ReadonlyArray<Entry>> => {
-  const dom = new JSDOM(await getDocs())
-  const cards = Array.from(
-    dom.window.document.querySelectorAll<HTMLElement>('section.card')
-  )
-  return cards.map(card => ({
-    name: getProp(card, 'a.name'),
-    description: getProp(card, 'div.description'),
-    signature: getProp(card, 'code:nth-child(1)'),
-    snippet: getProp(card, 'code:nth-child(2)'),
-    related: getListProp(card, 'div.see>a')
-  }))
-}
 
 const main = async (): Promise<void> => {
   const funcName = process.argv[2]
-  const documentation = await initDoc()
+  const docs = await loadDocs()
   const foundFuncs = funcName
-    ? documentation.filter(({ name }) => name.includes(funcName))
-    : documentation
+    ? docs.filter(({ name }) => name.includes(funcName))
+    : docs
   foundFuncs
     .map(formatEntry)
     .flat()

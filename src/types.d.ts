@@ -6,3 +6,6 @@ interface Entry {
   related: ReadonlyArray<string>
 }
 
+type Documentation = ReadonlyArray<Entry>
+
+interface Settings { searchTerm: string }
