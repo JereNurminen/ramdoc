@@ -2,10 +2,11 @@ import { loadDocs } from './utils/doc'
 import { formatEntry } from './utils/format'
 
 const main = async (): Promise<void> => {
-  const funcName = process.argv[2]
+  const searchQuery = process.argv[2]
   const docs = await loadDocs()
-  const foundFuncs = funcName
-    ? docs.filter(({ name }) => name.includes(funcName))
+  const foundFuncs = searchQuery
+    ? docs.filter(
+      ({ name }) => name.search(new RegExp(searchQuery, 'i')) >= 0)
     : docs
   foundFuncs
     .map(formatEntry)
