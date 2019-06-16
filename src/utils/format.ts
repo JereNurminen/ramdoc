@@ -25,15 +25,17 @@ const makeRow = (
 const formatDescription = (desc: string) =>
   makeRow(process.stdout.columns || DEFAULT_WIDTH, desc.replace(/\n/g, ' ').split(' '))
 
+const formatSeeAlso = (seeAlsoEntries: ReadonlyArray<string>): ReadonlyArray<string> =>
+  seeAlsoEntries.length
+    ? ['See also:', seeAlsoEntries.map(underline).join(', ')]
+    : []
+
 export const formatEntry = (entry: Entry) => [
   '',
   underline(bold(entry.name)),
   entry.signature,
-  '',
   ...formatDescription(entry.description),
   '',
   ...entry.snippet.split('\n'),
   '',
-  'See also:',
-  entry.related.map(underline).join(', ')
-]
+  ...formatSeeAlso(entry.related)]
