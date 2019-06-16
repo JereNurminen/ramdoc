@@ -1,19 +1,17 @@
 {
-  "name": "ramdadoc",
-  "version": "0.0.1",
+  "name": "ramdoc",
+  "version": "1.0.0",
   "main": "build/main.js",
   "author": "Jere Nurminen",
   "license": "MIT",
   "dependencies": {
     "jsdom": "^15.0.0",
-    "node-fetch": "^2.5.0",
-    "ramda": "^0.26.1"
+    "node-fetch": "^2.5.0"
   },
   "devDependencies": {
     "@types/es6-promise": "^3.3.0",
     "@types/jsdom": "^12.2.3",
     "@types/node-fetch": "^2.3.3",
-    "@types/ramda": "^0.26.8",
     "prettier": "1.17.0",
     "typescript": "^3.4.5"
   },
