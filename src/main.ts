@@ -1,6 +1,13 @@
 import { loadDocs } from './utils/doc'
 import { formatEntry } from './utils/format'
 
+const outputFormatted = (funcs: ReadonlyArray<Entry>): void => {
+  funcs
+    .map(formatEntry)
+    .flat()
+    .map(a => process.stdout.write(`${a}\n`))
+}
+
 const main = async (): Promise<void> => {
   const searchQuery = process.argv[2]
   const docs = await loadDocs()
@@ -8,10 +15,7 @@ const main = async (): Promise<void> => {
     ? docs.filter(
       ({ name }) => name.search(new RegExp(searchQuery, 'i')) >= 0)
     : docs
-  foundFuncs
-    .map(formatEntry)
-    .flat()
-    .map(a => process.stdout.write(`${a}\n`))
+  outputFormatted(foundFuncs)
 }
 
 main()
